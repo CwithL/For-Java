@@ -5,12 +5,11 @@ import java.io.IOException;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ChatServer {
+
 
     boolean started = false;
     ServerSocket serverSocket = null;
@@ -35,9 +34,8 @@ public class ChatServer {
         }
 
         try{
-
             while(started) {
-                //应当在这里等待，可以用异步的解决办法，也可以使用多线程
+                // 应当在这里等待，可以用异步的解决办法，也可以使用多线程
                 Socket s = serverSocket.accept();
                 Client c = new Client(s);
 System.out.println("a Client connected");
@@ -72,6 +70,7 @@ System.out.println("a Client connected");
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
 //send会发给已关闭却没在clients去除的客户端，这时会报错
         public void send(String str) {

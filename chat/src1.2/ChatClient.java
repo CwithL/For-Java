@@ -41,6 +41,7 @@ public class ChatClient extends Frame {
         tfTxt.addActionListener(new TFlistener());
         setVisible(true);
         connect();
+//连接上就启动
         tRecv.start();
     }
 
@@ -48,6 +49,7 @@ public class ChatClient extends Frame {
         try {
             s = new Socket("127.0.0.1", 8088);
             dos = new DataOutputStream(s.getOutputStream());
+//连接上就开始获取服务端的发给客户端的信息,bConnected = true;
             dis = new DataInputStream(s.getInputStream());
 System.out.println("connected!");
             bConnected = true;
@@ -60,6 +62,7 @@ System.out.println("connected!");
     public void disconnect() {
         try {
             dos.close();
+//在这里关闭也不能解决122行报错的问题,因为关掉线程,readUTF还是可能在等
             dis.close();
             s.close();
         }catch (IOException e){
@@ -69,7 +72,7 @@ System.out.println("connected!");
         try {
             //增加dis.close();
             // bConnected = false;这句false没有用，因为readUTF一直在等待你改成了false还是在while循环之中
-            // tRecv.join();
+            // tRecv.join();利用合并还是不行,因为还在等你合并不了,但你可以重启一个监听的线程来监视时间,如果时间长就关闭线程
             bConnected = false;
             tRecv.join();
         }catch (InterruptedException e) {
@@ -90,7 +93,7 @@ System.out.println("connected!");
         @Override
         public void actionPerformed(ActionEvent e) {
             String str = tfTxt.getText().trim();
-           // taContent.setText(str);
+           // taContent.setText(str);不用再次获得自己输入的字符串,服务端发过来的一个已经够了
             tfTxt.setText("");
 //发一字符串到服务器端DataOutputStream、writeUTF（）写出去
             try {
@@ -117,6 +120,7 @@ System.out.println("connected!");
                     taContent.setText(taContent.getText() + str + "\n");
                  }//加上下面的语句并不是很好，因为不算解决问题，只是强制停止并输出提示
             }catch (SocketException e) {
+//报错因为还在等,你却关闭了这个窗口,报错就关闭这个线程是一种敷衍的解决办法
                 System.out.println("force Bye");
             } catch (IOException e) {
                     e.printStackTrace();

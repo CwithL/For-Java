@@ -17,6 +17,7 @@ public class ChatServer {
     List<Client> clients = new ArrayList<Client>();
 
     public static void main(String[] args) {
+//首先服务器启动
         new ChatServer().start();
     }
 
@@ -38,8 +39,10 @@ public class ChatServer {
             while(started) {
                 //应当在这里等待，可以用异步的解决办法，也可以使用多线程
                 Socket s = serverSocket.accept();
+//将socket通过构造函数传递给Client,使接受流的布尔变量设置为true
                 Client c = new Client(s);
 System.out.println("a Client connected");
+//运行run()获得字符串,并通过send()利用多线程将信息传递给每一个客户端
                 new Thread(c).start();
                 clients.add(c);
                 // dis.close();
